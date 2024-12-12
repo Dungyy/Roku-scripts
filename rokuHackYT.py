@@ -33,7 +33,8 @@ def search_on_youtube(roku_ip, search_query):
         send_remote_control_command(roku_ip, remote_button)
         time.sleep(1)  # Wait for UI to respond
 
-roku_device_ip_address = input("Enter the IP address of the Roku device: ")
-youtube_search_query = input("Enter the search query for YouTube: ")
+if __name__ == "__main__":
+    roku_device_ip_address = input("Enter the IP address of the Roku device: ")
+    youtube_search_query = input("Enter the search query for YouTube: ")
 
-search_on_youtube(roku_device_ip_address, youtube_search_query)
+    search_on_youtube(roku_device_ip_address, youtube_search_query)
