@@ -126,13 +126,28 @@ def send_samsung_command(samsung_ip, command):
         return False
 
 def lg_control(lg_ip, search_query):
-    """Perform a YouTube search on an LG TV."""
+    """Perform a YouTube search or play a video on an LG TV."""
     try:
+        # Initialize the LG WebOS Client
         client = WebOSClient(lg_ip)
         client.connect()
+        log(f"Connected to LG TV at {lg_ip}")
+        
+        # Access MediaControl
         media = MediaControl(client)
-        log(f"Searching YouTube on LG TV at {lg_ip}")
-        media.play_youtube_video(search_query)
+        
+        # Format a YouTube search query URL
+        search_url = f"https://www.youtube.com/results?search_query={'+'.join(search_query.split())}"
+        log(f"Generated YouTube search URL: {search_url}")
+
+        # Play YouTube with the search query (if supported)
+        if hasattr(media, "play_youtube_video"):
+            log(f"Attempting to play YouTube video directly on LG TV at {lg_ip}")
+            media.play_youtube_video(search_query)
+        else:
+            log(f"Falling back to open YouTube search URL on LG TV at {lg_ip}")
+            client.launch_app("youtube", {"contentTarget": search_url})
+        
         return True
     except Exception as e:
         log(f"Failed to control LG TV at {lg_ip}: {e}")
